@@ -1,7 +1,7 @@
 **摘要：** 使用B站API获得url，再利用you-get库批量下载B站视频。  
 详细介绍：[项目 | 利用you-get库批量下载B站视频](https://www.gerongcun.xyz/blog/2021/dcdbab01/)
 
-### 项目目标
+### 1. 项目目标
 
 我经常刷B站，看到有意思的视频，会收藏起来。等收集到一定数量后，我会下载下来，便于日后重温。之所以下载下来，是因为担心视频可能会失效。
 
@@ -10,7 +10,7 @@
 综上，通过本项目，我想实现批量下载UP主投稿视频、自己收藏夹里的视频、UP主收藏夹里的视频。  
 Github项目：<https://github.com/GeRongcun/BilibiliBatchDownloader>
 
-### 实现思路
+### 2. 实现思路
 
 [you-get](https://github.com/soimort/you-get)是一个命令行工具，它可以从Web下载媒体内容(视频、音频、图像)。
 
@@ -21,7 +21,7 @@ Github项目：<https://github.com/GeRongcun/BilibiliBatchDownloader>
 
 所以，本项目的实现思路是使用B站API来获得视频url，再利用you-get下载视频。
 
-### you-get介绍
+### 3. you-get介绍
 
 you-get，一个强大视频下载工具，是github上Python 的一个开源库，只要你能获取视频的链接地址，就能用 you-get将视频下载下来。
 
@@ -34,7 +34,7 @@ Github项目：<https://github.com/soimort/you-get>
 参考资料：  
 ['you-get' 不是内部或外部命令，也不是可运行的程序 或批处理文件](https://ask.csdn.net/questions/6076639)
 
-### 实现效果
+### 4. 实现效果
 
 运行中的代码：  
 ![](README_attachments/运行代码.png)
@@ -42,7 +42,7 @@ Github项目：<https://github.com/soimort/you-get>
 成果文件：  
 ![](README_attachments/成果文件.png)
 
-### 文件目录介绍
+### 5. 文件目录介绍
 
 ```
 │  README.md
