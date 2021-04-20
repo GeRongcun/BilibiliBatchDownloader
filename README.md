@@ -1,4 +1,4 @@
-**摘要：**使用B站API获得url，再利用you-get库批量下载B站视频。  
+**摘要：** 使用B站API获得url，再利用you-get库批量下载B站视频。  
 详细介绍：[项目 | 利用you-get库批量下载B站视频](https://www.gerongcun.xyz/blog/2021/dcdbab01/)
 
 ### 项目目标
@@ -22,6 +22,7 @@ Github项目：<https://github.com/GeRongcun/BilibiliBatchDownloader>
 所以，本项目的实现思路是使用B站API来获得视频url，再利用you-get下载视频。
 
 ### you-get介绍
+
 you-get，一个强大视频下载工具，是github上Python 的一个开源库，只要你能获取视频的链接地址，就能用 you-get将视频下载下来。
 
 you-get支持下载的视频网站很多，比如B站、Youtube、爱奇艺、腾讯视频……
