@@ -1,8 +1,6 @@
 **摘要：**使用B站API获得url，再利用you-get库批量下载B站视频。  
 详细介绍：[项目 | 利用you-get库批量下载B站视频](https://www.gerongcun.xyz/blog/2021/dcdbab01/)
 
-## 引言
-
 ### 项目目标
 
 我经常刷B站，看到有意思的视频，会收藏起来。等收集到一定数量后，我会下载下来，便于日后重温。之所以下载下来，是因为担心视频可能会失效。
@@ -38,13 +36,14 @@ Github项目：<https://github.com/soimort/you-get>
 ### 实现效果
 
 运行中的代码：  
-![](项目-利用you-get库批量下载B站视频/运行代码.png)
+![](README_attachments/运行代码.png)
 
 成果文件：  
-![](项目-利用you-get库批量下载B站视频/成果文件.png)
+![](README_attachments/成果文件.png)
 
 ### 文件目录介绍
 
+```
 │  README.md
 │  README文件
 ├─core
@@ -57,9 +56,9 @@ Github项目：<https://github.com/soimort/you-get>
 │    自动生成的编译文件
 │          downloadVideos.cpython-38.pyc
 │          getVideoUrl.cpython-38.pyc
-│          
 ├─docs
 │      JSON格式化_UP主投稿视频API.txt
 │        根据投稿视频API，获得的html文本
 │      JSON格式化_收藏夹视频API.txt
-│      README.md
+└─     README.md
+```
