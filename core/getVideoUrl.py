@@ -26,6 +26,24 @@ def getHTMLText(url):
     except:
         return ""
 
+# 根据时间戳获得8位日期字符串
+# now：1618921546，时间戳
+def getDateStr(now = int(time.time())):
+    now_Array = time.localtime(now)
+    # time.struct_time(tm_year=2021, tm_mon=4, tm_mday=20, tm_hour=11,
+    # tm_min=13, tm_sec=36, tm_wday=1, tm_yday=110, tm_isdst=0)
+    now_str = "%04d%02d%02d" % (now_Array.tm_year,now_Array.tm_mon,now_Array.tm_mday)
+    return now_str
+    # '20210420'
+
+# 规范化文件夹名称，去掉空格、/ \ : * ? " < > |
+# 同时，本项目以下划线作为分隔符，所以，文件夹名称中也不能有下划线
+def NormalFloderName(name):
+    charArray=[' ','/','\\',':','*','?','"','<','>','|','_']
+    for char in charArray:
+        name=name.replace(char, '')
+    return name
+
 # 根据收藏夹url获得收藏夹API的url
 # fav_url：收藏夹url
 # fav_url='https://space.bilibili.com/91724487/favlist?fid=204884287&ftype=create'
@@ -104,8 +122,10 @@ def getContriAPI_url(contri_url):
 # API_url：API的url
 # excelFolder：文件夹，用于存放包含视频url的excel表格文件
 # API_url='https://api.bilibili.com/x/v3/fav/resource/list?media_id=1055169787&pn=1&ps=20&keyword=&order=mtime&type=0&tid=0&platform=web&jsonp=jsonp'
-# getFavlistVideoUrl(API_url,excelFolder)
-def getFavlistVideoUrl(API_url,excelFolder):
+# beginTime：视频最早发布时间，默认值是'19700101'
+# endTime：视频最迟发布时间，默认值是当前日期8位字符串
+# getFavlistVideoUrl(API_url,excelFolder,'19700101','20210420')
+def getFavlistVideoUrl(API_url,excelFolder,beginTime,endTime):
     # 解析url
     url_parse=urlparse(API_url)
     # ParseResult(scheme='https', netloc='api.bilibili.com', path='/x/v3/fav/resource/list', params='',
@@ -167,8 +187,9 @@ def getFavlistVideoUrl(API_url,excelFolder):
         for data_video in data_videos:
             # data_video=data_videos[0]
             # "title": "英法对决！哈克表情管理名场面！9.8分硬核神剧《是，首相》（06/S2E3&E4）", 视频名称
-            # 去掉标题中的空格，不然后面创建文件夹会报错
-            title=data_video["title"].replace(" ", "")
+            # 规范化文件夹名称，去掉空格、/ \ : * ? " < > |
+            title=data_video["title"]
+            title=NormalFloderName(title)
 
             # "page": 1, 视频分P数
             page=data_video["page"]
@@ -184,15 +205,16 @@ def getFavlistVideoUrl(API_url,excelFolder):
             # "pubtime": 1610036663, 稿件发布时间
             # "fav_time": 1610090951, 收藏时间
             pubtime=data_video["pubtime"]
-            pubtime_Array = time.localtime(pubtime)
-            # time.struct_time(tm_year=2021, tm_mon=1, tm_mday=8, tm_hour=0, 
-            # tm_min=24, tm_sec=23, tm_wday=4, tm_yday=8, tm_isdst=0)
-            pubtime_str = "%04d%02d%02d" % (pubtime_Array.tm_year,pubtime_Array.tm_mon,pubtime_Array.tm_mday)
+            pubtime_str=getDateStr(pubtime)
+            # 20210108
 
             fav_time=data_video["fav_time"]
-            fav_time_Array = time.localtime(fav_time)
-            fav_time_str = "%04d%02d%02d" % (fav_time_Array.tm_year,fav_time_Array.tm_mon,fav_time_Array.tm_mday)
-
+            fav_time_str=getDateStr(fav_time)
+            if fav_time_str>endTime:
+                continue
+            if fav_time_str<beginTime:
+                break
+            
             # "bvid": "BV1Bp4y1s7Th",视频稿件bvid
             bvid=data_video["bvid"]
 
@@ -209,14 +231,8 @@ def getFavlistVideoUrl(API_url,excelFolder):
     
     print("视频数量：%d，有效视频数量：%d，失效视频数量：%d" % (video_invalid+video_valid,video_valid,video_invalid))
 
-    # time获取当前时间戳
-    now = int(time.time())
-    now_Array = time.localtime(now)
-    # time.struct_time(tm_year=2021, tm_mon=4, tm_mday=20, tm_hour=11,
-    # tm_min=13, tm_sec=36, tm_wday=1, tm_yday=110, tm_isdst=0)
-    now_str = "%04d%02d%02d" % (now_Array.tm_year,now_Array.tm_mon,now_Array.tm_mday)
     # 存放视频url的excel文件
-    excelFile=os.path.join(excelFolder,'收藏夹'+'_'+favlistUpper+'_'+favlistName+'_'+now_str+'.xlsx')
+    excelFile=os.path.join(excelFolder,'收藏夹'+'_'+favlistUpper+'_'+favlistName+'_'+beginTime+'_'+endTime+'.xlsx')
 
     # 写入Excel文件
     data_excel = pd.DataFrame(np_videos)
@@ -232,8 +248,10 @@ def getFavlistVideoUrl(API_url,excelFolder):
 # API_url：API的url
 # excelFolder：文件夹，用于存放包含视频url的excel表格文件
 # API_url='https://api.bilibili.com/x/space/arc/search?mid=258150656&ps=30&tid=0&pn=1&order=pubdate&jsonp=jsonp'
-# getContriVideoUrl(API_url,excelFolder)
-def getContriVideoUrl(API_url,excelFolder):
+# beginTime：视频最早发布时间，默认值是'19700101'
+# endTime：视频最迟发布时间，默认值是当前日期8位字符串
+# getContriVideoUrl(API_url,excelFolder,'19700101','20210420')
+def getContriVideoUrl(API_url,excelFolder,beginTime,endTime):
     # 解析url
     url_parse=urlparse(API_url)
     # ParseResult(scheme='https', netloc='api.bilibili.com', path='/x/space/arc/search',
@@ -294,8 +312,9 @@ def getContriVideoUrl(API_url,excelFolder):
         # 遍历当前页面的视频信息
         for data_video in data_videos:
             # "title": "【回形针PaperClip × 沃尔沃】汽车车身如何护你周全？", 视频名称
-            # 去掉标题中的空格，不然后面创建文件夹会报错
-            title=data_video["title"].replace(" ", "")
+            # 规范化文件夹名称，去掉空格、/ \ : * ? " < > |
+            title=data_video["title"]
+            title=NormalFloderName(title)
 
             # "page": 1, 视频分P数
             # 投稿视频应该都是单集
@@ -305,10 +324,12 @@ def getContriVideoUrl(API_url,excelFolder):
             
             # "created": 1618578002, 稿件发布时间
             created=data_video["created"]
-            created_Array = time.localtime(created)
-            # time.struct_time(tm_year=2021, tm_mon=1, tm_mday=8, tm_hour=0, 
-            # tm_min=24, tm_sec=23, tm_wday=4, tm_yday=8, tm_isdst=0)
-            created_str = "%04d%02d%02d" % (created_Array.tm_year,created_Array.tm_mon,created_Array.tm_mday)
+            created_str = getDateStr(created)
+
+            if created_str>endTime:
+                continue
+            if created_str<beginTime:
+                break
 
             # "bvid": "BV1Tf4y1s7pE",视频稿件bvid
             bvid=data_video["bvid"]
@@ -327,13 +348,7 @@ def getContriVideoUrl(API_url,excelFolder):
     
     print("视频数量：%d，有效视频数量：%d，失效视频数量：%d" % (video_invalid+video_valid,video_valid,video_invalid))
     
-    # time获取当前时间戳
-    now = int(time.time())
-    now_Array = time.localtime(now)
-    # time.struct_time(tm_year=2021, tm_mon=4, tm_mday=20, tm_hour=11,
-    # tm_min=13, tm_sec=36, tm_wday=1, tm_yday=110, tm_isdst=0)
-    now_str = "%04d%02d%02d" % (now_Array.tm_year,now_Array.tm_mon,now_Array.tm_mday)
-    excelFile=os.path.join(excelFolder,'投稿'+'_'+author+'_'+now_str+'.xlsx')
+    excelFile=os.path.join(excelFolder,'投稿'+'_'+author+'_'+beginTime+'_'+endTime+'.xlsx')
     
     # 写入Excel文件
     data_excel = pd.DataFrame(np_videos)
