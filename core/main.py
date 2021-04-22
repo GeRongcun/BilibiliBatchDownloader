@@ -45,16 +45,18 @@ def downloadContributionVideos(contri_url,beginTime='19700101',endTime=getVideoU
 # main函数
 def main():
     # 回形针PaperClip投稿
-    # contri_url='https://space.bilibili.com/258150656/video?tid=0&page=2&keyword=&order=pubdate'
-    # downloadFolder_videoList=downloadContributionVideos(contri_url,'20201224','20210422')
-    # renameFiles.RenameFiles(downloadFolder_videoList)
+    contri_url='https://space.bilibili.com/258150656/video?tid=0&page=2&keyword=&order=pubdate'
+    downloadFolder_videoList=downloadContributionVideos(contri_url,'20201224','20210422')
+    # 删除字幕文件， 对于单集视频，将视频移到上一级目录，并删除原文件夹
+    renameFiles.RenameFiles(downloadFolder_videoList)
     
-    # 划水小能手的收藏夹-学习
+    # 划水小能手的收藏夹-学习，我自己的收藏夹
     # fav_url='https://space.bilibili.com/91724487/favlist?fid=204884287&ftype=create'
     # downloadFolder_videoList=downloadFavlistVideos(fav_url,'19700101','20210421')
+    # 删除字幕文件， 对于单集视频，将视频移到上一级目录，并删除原文件夹
     # renameFiles.RenameFiles(downloadFolder_videoList)
 
-    # 划水小能手的收藏夹-驾驶
+    # 划水小能手的收藏夹-驾驶，我自己的收藏夹
     # fav_url='https://space.bilibili.com/91724487/favlist?fid=1204908287&ftype=create'
     # downloadFolder_videoList=downloadFavlistVideos(fav_url,'19700101','20210422')
     # renameFiles.RenameFiles(downloadFolder_videoList)
